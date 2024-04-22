@@ -1,1 +1,5 @@
-# rish742.github.io
+# byteblizzard.github.io
+
+## Rishab RK - Web Portfolio
+
+Welcome to my Web portfolio! 
