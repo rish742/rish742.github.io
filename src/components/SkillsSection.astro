@@ -1,0 +1,42 @@
+---
+import styles from './SkillsSection.module.css';
+
+interface SkillGroup {
+  title: string;
+  items: string[];
+}
+
+interface Props {
+  groups: SkillGroup[];
+  title?: string;
+  intro?: string;
+}
+
+const {
+  groups,
+  title = 'Skills Snapshot',
+  intro = 'Resume-backed capabilities, organized for fast scanning and future updates.',
+} = Astro.props;
+---
+
+<section class="section sectionMuted">
+  <div class="container">
+    <div class="sectionHeading">
+      <span class="eyebrow">Skills</span>
+      <h2 class="sectionTitle">{title}</h2>
+      <p class="lede">{intro}</p>
+    </div>
+    <div class={styles.grid}>
+      {groups.map((group) => (
+        <article class={styles.card}>
+          <h3>{group.title}</h3>
+          <ul class={styles.chips}>
+            {group.items.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

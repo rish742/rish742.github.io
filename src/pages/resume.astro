@@ -1,0 +1,88 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ExperienceSection from '@/components/ExperienceSection.astro';
+import EducationSection from '@/components/EducationSection.astro';
+import SkillsSection from '@/components/SkillsSection.astro';
+import ProjectCard from '@/components/ProjectCard.astro';
+import { certifications, education, experience, profile, projects, skillGroups } from '@/data/portfolio';
+---
+
+<BaseLayout
+  title="Resume | Rishab Khatokar"
+  description="Web version of the latest resume for Rishab Khatokar, with downloadable PDF."
+>
+  <section class="section articleShell">
+    <div class="container">
+      <div class="resumeHeader">
+        <div>
+          <span class="eyebrow">Resume</span>
+          <h1 class="pageTitle">{profile.name}</h1>
+          <p class="pageLead" style="color: rgba(255, 255, 255, 0.8);">{profile.role}</p>
+        </div>
+        <div class="resumeMeta">
+          <span>{profile.location}</span>
+          <a href={`mailto:${profile.email}`}>{profile.email}</a>
+          <span>{profile.phone}</span>
+          <a href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
+        </div>
+        <div class="buttonRow">
+          <a class="buttonPrimary" href={profile.resumePath}>Download PDF</a>
+          <a class="buttonOutline" href="/contact">Contact</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="sectionHeading">
+        <span class="eyebrow">Summary</span>
+        <h2 class="sectionTitle">Professional summary</h2>
+      </div>
+      <div class="panel">
+        <p class="lede" style="max-width: none;">{profile.summary}</p>
+      </div>
+    </div>
+  </section>
+
+  <ExperienceSection items={experience} title="Work experience" />
+  <SkillsSection groups={skillGroups} title="Technical and domain skills" />
+
+  <section class="section sectionMuted">
+    <div class="container">
+      <div class="sectionHeading">
+        <span class="eyebrow">Projects</span>
+        <h2 class="sectionTitle">Resume projects</h2>
+      </div>
+      <div class="projectGrid">
+        {projects.map((project) => (
+          <ProjectCard project={project} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <EducationSection items={education} />
+
+  <section class="section">
+    <div class="container">
+      <div class="sectionHeading">
+        <span class="eyebrow">Certifications</span>
+        <h2 class="sectionTitle">Current status</h2>
+      </div>
+      {
+        certifications.length ? (
+          <ul class="chipList">
+            {certifications.map((certification) => (
+              <li>{certification}</li>
+            ))}
+          </ul>
+        ) : (
+          <div class="emptyState">
+            No certifications were listed in the current resume PDF, so this section has been intentionally left empty.
+          </div>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>

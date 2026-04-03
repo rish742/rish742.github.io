@@ -1,0 +1,158 @@
+---
+import Navbar from '@/components/Navbar.astro';
+import Footer from '@/components/Footer.astro';
+import SeoHead from '@/components/SeoHead.astro';
+import '@/styles/global.css';
+import { siteMeta } from '@/data/portfolio';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  pageType?: 'website' | 'article';
+  transparentNav?: boolean;
+}
+
+const {
+  title = siteMeta.title,
+  description = siteMeta.description,
+  image = siteMeta.defaultImage,
+  pageType = 'website',
+  transparentNav = false,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://rishabrk.tech').toString();
+const socialImage = new URL(image, Astro.site ?? 'https://rishabrk.tech').toString();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#171925" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="canonical" href={canonical} />
+    <SeoHead
+      title={title}
+      description={description}
+      canonical={canonical}
+      image={socialImage}
+      pageType={pageType}
+      siteName={siteMeta.brand}
+    />
+    <slot name="head" />
+  </head>
+  <body>
+    <div class="scrollProgress" aria-hidden="true">
+      <span id="scroll-progress"></span>
+    </div>
+    <Navbar transparent={transparentNav} />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+
+    <script is:inline>
+      const body = document.body;
+      const progress = document.getElementById('scroll-progress');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const updateScrollState = () => {
+        const top = window.scrollY || window.pageYOffset;
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const ratio = max > 0 ? Math.min(top / max, 1) : 0;
+
+        body.classList.toggle('is-scrolled', top > 18);
+
+        if (progress) {
+          progress.style.transform = `scaleX(${ratio})`;
+        }
+      };
+
+      let ticking = false;
+      const onScroll = () => {
+        if (ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(() => {
+          updateScrollState();
+          ticking = false;
+        });
+      };
+
+      const revealTargets = [
+        ...document.querySelectorAll(
+          'main .sectionHeading, main .projectGrid > *, main .blogGrid > *, main .panel, main .linkCard, main .resumeHeader, main .portraitFrame, main .ctaBanner'
+        ),
+      ];
+
+      revealTargets.forEach((element, index) => {
+        element.setAttribute('data-reveal', '');
+        element.style.setProperty('--reveal-delay', `${Math.min(index % 6, 5) * 55}ms`);
+      });
+
+      if (reduceMotion || !('IntersectionObserver' in window)) {
+        revealTargets.forEach((element) => element.classList.add('is-visible'));
+      } else {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.12, rootMargin: '0px 0px -10% 0px' }
+        );
+
+        revealTargets.forEach((element) => observer.observe(element));
+      }
+
+      const showCopyToast = (message) => {
+        const existingToast = document.querySelector('.shareToast');
+        existingToast?.remove();
+
+        const toast = document.createElement('div');
+        toast.className = 'shareToast';
+        toast.textContent = message;
+        body.appendChild(toast);
+
+        window.setTimeout(() => {
+          toast.remove();
+        }, 2200);
+      };
+
+      document.addEventListener('click', async (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) {
+          return;
+        }
+
+        const button = target.closest('[data-copy-link]');
+        if (!(button instanceof HTMLElement)) {
+          return;
+        }
+
+        event.preventDefault();
+        const link = button.dataset.copyLink;
+        if (!link) {
+          return;
+        }
+
+        try {
+          await navigator.clipboard.writeText(link);
+          showCopyToast('Link copied to clipboard.');
+        } catch (error) {
+          console.error('Copy link failed.', error);
+          showCopyToast('Unable to copy the link.');
+        }
+      });
+
+      updateScrollState();
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+    </script>
+  </body>
+</html>

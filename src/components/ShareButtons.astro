@@ -1,0 +1,40 @@
+---
+interface Props {
+  title: string;
+  url: string;
+  compact?: boolean;
+}
+
+const { title, url, compact = false } = Astro.props;
+const encodedUrl = encodeURIComponent(url);
+const encodedTitle = encodeURIComponent(title);
+---
+
+<div class="blogShareRow" aria-label="Share this article">
+  <span class="blogShareLabel">{compact ? 'Share' : 'Share this post'}</span>
+  <a
+    class="shareButton"
+    href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`}
+    target="_blank"
+    rel="noreferrer"
+  >
+    LinkedIn
+  </a>
+  <a
+    class="shareButton"
+    href={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`}
+    target="_blank"
+    rel="noreferrer"
+  >
+    X / Twitter
+  </a>
+  <a
+    class="shareButton"
+    href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}
+    target="_blank"
+    rel="noreferrer"
+  >
+    Facebook
+  </a>
+  <button class="shareButton" type="button" data-copy-link={url}>Copy Link</button>
+</div>

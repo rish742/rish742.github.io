@@ -1,0 +1,46 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getMarkdownPosts } from '@/lib/hybrid-blog.server';
+import { siteMeta } from '@/data/portfolio';
+import '@/styles/blog.css';
+
+const markdownSeed = JSON.stringify(
+  (await getMarkdownPosts()).map((post) => ({
+    id: post.id,
+    slug: post.slug,
+    title: post.title,
+    description: post.description,
+    date: post.date,
+    tags: post.tags,
+    readingTime: post.readingTime,
+    coverImage: post.coverImage,
+    authorName: post.authorName,
+    source: post.source,
+  })),
+).replace(/</g, '\\u003c');
+---
+
+<BaseLayout
+  title="Blog Post | Rishab Khatokar"
+  description="Editorial-style article view for Firestore-backed blog posts."
+  image={siteMeta.defaultImage}
+  pageType="article"
+>
+  <article class="section articleShell">
+    <div class="container blogArticleWrap blogDynamicShell">
+      <div id="dynamic-blog-post">
+        <div class="blogStateCard">Loading article...</div>
+      </div>
+      <noscript>
+        <div class="blogStateCard">
+          JavaScript is required to load Firestore-backed articles on this static hosting setup.
+        </div>
+      </noscript>
+      <script type="application/json" id="blog-markdown-seed" set:html={markdownSeed}></script>
+      <script>
+        import { initDynamicBlogPostPage } from '@/scripts/blog-post';
+        initDynamicBlogPostPage();
+      </script>
+    </div>
+  </article>
+</BaseLayout>

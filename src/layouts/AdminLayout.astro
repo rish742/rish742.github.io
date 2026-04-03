@@ -1,0 +1,66 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import '@/styles/admin.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  intro?: string;
+  activePath?: string;
+}
+
+const {
+  title,
+  description = 'Secure Firebase-backed blog administration for managing Firestore posts.',
+  intro = description,
+  activePath = '/admin',
+} = Astro.props;
+
+const links = [
+  { href: '/admin', label: 'Overview' },
+  { href: '/admin/posts', label: 'Posts' },
+  { href: '/admin/posts/new', label: 'New Post' },
+];
+---
+
+<BaseLayout title={`${title} | Admin | Rishab Khatokar`} description={description}>
+  <section class="section articleShell adminShellSection">
+    <div class="container adminContainer">
+      <div class="adminHeroCard">
+        <div>
+          <span class="eyebrow">Blog Admin</span>
+          <h1 class="pageTitle">{title}</h1>
+          <p class="pageLead">{intro}</p>
+        </div>
+        <div class="adminHeroMeta">
+          <div class="adminIdentityBadge">
+            <span data-admin-state-label>Checking access</span>
+            <strong data-admin-email>Guest</strong>
+          </div>
+          <div class="buttonRow">
+            <a class="buttonOutline" href="/blog">Public Blog</a>
+            <button class="buttonPrimary adminSignOutButton" type="button" data-admin-signout>
+              Sign Out
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <nav class="adminTabs" aria-label="Admin navigation">
+        {links.map((link) => (
+          <a
+            class="adminTab"
+            href={link.href}
+            aria-current={activePath === link.href ? 'page' : undefined}
+          >
+            {link.label}
+          </a>
+        ))}
+      </nav>
+
+      <div class="adminPageBody">
+        <slot />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,206 @@
+---
+interface Props {
+  mode: 'new' | 'edit';
+}
+
+const { mode } = Astro.props;
+const isEdit = mode === 'edit';
+---
+
+<div class="adminEditorShell" data-admin-editor data-mode={mode}>
+  <div class="adminNotice" id="admin-editor-feedback" hidden></div>
+
+  <div class="adminEditorGrid">
+    <form class="panel adminCard adminFormCard" id="admin-post-form" novalidate>
+      <div class="adminCardHeader">
+        <div>
+          <h2>{isEdit ? 'Edit post' : 'Compose post'}</h2>
+          <p class="adminSmallNote">
+            Write in Markdown, keep drafts private, and publish when the article is ready for the public blog.
+          </p>
+        </div>
+        <div class="adminActionsRow">
+          <a
+            class="buttonOutline"
+            href="/blog"
+            target="_blank"
+            rel="noreferrer"
+            id="admin-live-link"
+            hidden
+          >
+            View Live
+          </a>
+          {
+            isEdit ? (
+              <button class="adminButtonDanger" type="button" id="admin-delete-post">
+                Delete
+              </button>
+            ) : null
+          }
+        </div>
+      </div>
+
+      <div class="adminFieldRow">
+        <label class="adminField">
+          <span>Title</span>
+          <input id="admin-post-title" name="title" type="text" placeholder="A practical guide to..." required />
+        </label>
+
+        <label class="adminField">
+          <span>Author name</span>
+          <input
+            id="admin-post-author"
+            name="authorName"
+            type="text"
+            placeholder="Rishab Khatokar"
+            required
+          />
+        </label>
+      </div>
+
+      <div class="adminFieldRow adminFieldRowSlug">
+        <label class="adminField">
+          <span>Slug</span>
+          <input
+            id="admin-post-slug"
+            name="slug"
+            type="text"
+            placeholder="practical-guide-to-analytics-delivery"
+            required
+          />
+        </label>
+        <button class="buttonOutline adminInlineButton" type="button" id="admin-generate-slug">
+          Generate slug
+        </button>
+      </div>
+
+      <label class="adminField">
+        <span>Description / excerpt</span>
+        <textarea
+          id="admin-post-excerpt"
+          name="excerpt"
+          rows="4"
+          placeholder="A concise summary that works well in cards, social previews, and search results."
+          required
+        ></textarea>
+      </label>
+
+      <div class="adminFieldRow">
+        <label class="adminField">
+          <span>Tags</span>
+          <input
+            id="admin-post-tags"
+            name="tags"
+            type="text"
+            placeholder="analytics, machine-learning, delivery"
+          />
+        </label>
+
+        <label class="adminField">
+          <span>Status</span>
+          <select id="admin-post-status" name="status">
+            <option value="draft">Draft</option>
+            <option value="published">Published</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="adminFieldRow">
+        <label class="adminField">
+          <span>Publish date</span>
+          <input id="admin-post-date" name="publishedAt" type="datetime-local" />
+        </label>
+
+        <div class="adminField adminMetaCard">
+          <span>Editor notes</span>
+          <p class="adminSmallNote">
+            Published posts are publicly readable. Draft posts stay accessible only to the allowed admin account.
+          </p>
+          <div class="adminMetaList">
+            <span id="admin-editor-reading-time">Estimated reading time: 1 min read</span>
+            <span id="admin-editor-updated-at">Last saved: not yet</span>
+          </div>
+        </div>
+      </div>
+
+      <label class="adminField">
+        <span>Cover image URL</span>
+        <input
+          id="admin-post-cover"
+          name="coverImage"
+          type="url"
+          placeholder="https://..."
+        />
+      </label>
+
+      <div class="adminUploadRow">
+        <label class="adminField adminUploadField">
+          <span>Upload cover image</span>
+          <input id="admin-post-cover-file" name="coverFile" type="file" accept="image/*" />
+        </label>
+        <button class="buttonOutline adminInlineButton" type="button" id="admin-upload-cover">
+          Upload to Firebase Storage
+        </button>
+      </div>
+      <p class="adminSmallNote" id="admin-upload-feedback">
+        Optional. Uploaded files are stored under `blog-covers/` and the public URL is applied automatically.
+      </p>
+
+      <label class="adminField">
+        <span>Article content</span>
+        <textarea
+          id="admin-post-content"
+          name="content"
+          rows="18"
+          placeholder="Write your post content here using Markdown."
+          required
+        ></textarea>
+      </label>
+
+      <div class="adminFieldRow">
+        <label class="adminField">
+          <span>SEO title</span>
+          <input
+            id="admin-post-seo-title"
+            name="seoTitle"
+            type="text"
+            placeholder="Optional override for search and social titles"
+          />
+        </label>
+
+        <label class="adminField">
+          <span>SEO description</span>
+          <textarea
+            id="admin-post-seo-description"
+            name="seoDescription"
+            rows="4"
+            placeholder="Optional override for search and social descriptions"
+          ></textarea>
+        </label>
+      </div>
+
+      <div class="adminActionsRow adminActionsFooter">
+        <button class="buttonPrimary" type="submit" id="admin-save-post">Save changes</button>
+        <button class="buttonOutline" type="button" id="admin-publish-post">
+          Publish now
+        </button>
+      </div>
+    </form>
+
+    <aside class="panel adminCard adminPreviewCard">
+      <div class="adminCardHeader">
+        <div>
+          <h2>Preview</h2>
+          <p class="adminSmallNote">
+            This preview mirrors the Firestore-backed article experience for readability checks before publishing.
+          </p>
+        </div>
+      </div>
+      <div class="adminPreviewCanvas" id="admin-preview-root">
+        <div class="adminPreviewPlaceholder">
+          Start writing to see a live editorial preview of the article.
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>

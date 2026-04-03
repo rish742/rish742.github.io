@@ -1,0 +1,78 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+---
+
+<AdminLayout
+  title="Overview"
+  activePath="/admin"
+  intro="A lightweight editorial dashboard layered into the portfolio, with Google sign-in, Firestore drafts, public publishing, and recruiter-friendly blog presentation."
+>
+  <div class="adminGrid adminStatsGrid">
+    <article class="panel adminStatCard">
+      <span>Total Firestore posts</span>
+      <strong data-dashboard-total>0</strong>
+      <p>All admin-managed posts in the Firestore collection.</p>
+    </article>
+
+    <article class="panel adminStatCard">
+      <span>Published</span>
+      <strong data-dashboard-published>0</strong>
+      <p>Publicly readable posts surfaced through the blog listing and article route.</p>
+    </article>
+
+    <article class="panel adminStatCard">
+      <span>Drafts</span>
+      <strong data-dashboard-drafts>0</strong>
+      <p>Private working drafts visible only to the authorized admin account.</p>
+    </article>
+  </div>
+
+  <div class="adminSplitGrid">
+    <section class="panel adminCard">
+      <div class="adminCardHeader">
+        <div>
+          <h2>Editorial workflow</h2>
+          <p class="adminSmallNote">
+            Keep the public blog clean and polished while using Firestore for browser-based editing.
+          </p>
+        </div>
+      </div>
+
+      <div class="adminActionGrid">
+        <a class="adminActionCard" href="/admin/posts/new">
+          <strong>Write a new post</strong>
+          <span>Open the Markdown editor with preview, SEO fields, and publish controls.</span>
+        </a>
+        <a class="adminActionCard" href="/admin/posts">
+          <strong>Review all posts</strong>
+          <span>Manage drafts, published posts, dates, tags, and quick public links.</span>
+        </a>
+        <a class="adminActionCard" href="/blog">
+          <strong>Check the public blog</strong>
+          <span>Review the editorial list and article experience readers will see.</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="panel adminCard">
+      <div class="adminCardHeader">
+        <div>
+          <h2>Recent posts</h2>
+          <p class="adminSmallNote">
+            Firestore-managed posts appear here. Markdown seed posts remain code-managed.
+          </p>
+        </div>
+      </div>
+
+      <div id="admin-dashboard-feedback" class="adminNotice" hidden></div>
+      <div id="admin-dashboard-recent" class="adminStack">
+        <div class="adminStateCard">Loading recent posts...</div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    import { initAdminDashboardPage } from '@/scripts/admin-dashboard';
+    initAdminDashboardPage();
+  </script>
+</AdminLayout>

@@ -1,0 +1,48 @@
+---
+import styles from './ProjectCard.module.css';
+
+interface Project {
+  title: string;
+  stack: string[];
+  summary: string;
+  bullets: string[];
+  accent: string;
+  image?: string;
+}
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+---
+
+<article class={styles.card}>
+  {
+    project.image ? (
+      <div class={styles.media}>
+        <img src={project.image} alt={project.title} loading="lazy" />
+      </div>
+    ) : (
+      <div class={styles.placeholder}>
+        <span>{project.accent}</span>
+      </div>
+    )
+  }
+  <div class={styles.content}>
+    <div>
+      <h3 class={styles.title}>{project.title}</h3>
+      <p class={styles.summary}>{project.summary}</p>
+    </div>
+    <ul class={styles.stack}>
+      {project.stack.map((item) => (
+        <li>{item}</li>
+      ))}
+    </ul>
+    <ul class={styles.bullets}>
+      {project.bullets.map((bullet) => (
+        <li>{bullet}</li>
+      ))}
+    </ul>
+  </div>
+</article>

@@ -1,0 +1,34 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ExperienceSection from '@/components/ExperienceSection.astro';
+import EducationSection from '@/components/EducationSection.astro';
+import SkillsSection from '@/components/SkillsSection.astro';
+import { education, experience, profile, skillGroups } from '@/data/portfolio';
+---
+
+<BaseLayout
+  title="About | Rishab Khatokar"
+  description="Background, experience, and skill profile for Rishab Khatokar."
+>
+  <section class="section articleShell">
+    <div class="container split">
+      <div class="portraitFrame">
+        <img src="/assets/img/Rishab_pic1.jpg" alt="Portrait of Rishab Khatokar" loading="lazy" />
+      </div>
+      <div>
+        <span class="eyebrow">About</span>
+        <h1 class="pageTitle">Data analyst focused on practical, decision-ready outcomes</h1>
+        <p class="pageLead">{profile.summary}</p>
+        <ul class="chipList">
+          {profile.highlights.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <ExperienceSection items={experience} />
+  <EducationSection items={education} />
+  <SkillsSection groups={skillGroups} title="Full skill breakdown" />
+</BaseLayout>

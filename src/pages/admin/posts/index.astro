@@ -1,0 +1,59 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { getMarkdownPosts } from '@/lib/hybrid-blog.server';
+
+const markdownSeed = JSON.stringify(await getMarkdownPosts()).replace(/</g, '\\u003c');
+---
+
+<AdminLayout
+  title="Posts"
+  activePath="/admin/posts"
+  intro="Review the full hybrid catalog, see which posts live in Firestore versus Markdown, and migrate code-managed articles into the browser editor when you are ready."
+>
+  <div class="adminToolbar">
+    <div>
+      <h2>Hybrid post catalog</h2>
+      <p class="adminSmallNote">
+        Firestore posts stay editable here. Markdown posts remain code-managed until you migrate them.
+      </p>
+    </div>
+    <div class="adminActionsRow">
+      <button class="buttonOutline" type="button" id="admin-migrate-all-markdown">
+        Migrate Markdown to Firestore
+      </button>
+      <a class="buttonPrimary" href="/admin/posts/new">New Post</a>
+    </div>
+  </div>
+
+  <div class="adminNotice" id="admin-posts-feedback" hidden></div>
+
+  <div class="adminGrid adminStatsGrid adminStatsCompact">
+    <article class="panel adminStatCard">
+      <span>All posts</span>
+      <strong data-posts-total>0</strong>
+      <p>Combined Markdown and Firestore entries surfaced through the blog.</p>
+    </article>
+
+    <article class="panel adminStatCard">
+      <span>Firestore</span>
+      <strong data-posts-firestore>0</strong>
+      <p>Browser-managed posts stored in `posts` or legacy `blogPosts`.</p>
+    </article>
+
+    <article class="panel adminStatCard">
+      <span>Markdown</span>
+      <strong data-posts-markdown>0</strong>
+      <p>Code-managed files under `src/content/blog`.</p>
+    </article>
+  </div>
+
+  <div class="adminPostList" id="admin-posts-list">
+    <div class="adminStateCard">Loading posts...</div>
+  </div>
+
+  <script type="application/json" id="admin-markdown-posts" set:html={markdownSeed}></script>
+  <script>
+    import { initAdminPostsPage } from '@/scripts/admin-posts';
+    initAdminPostsPage();
+  </script>
+</AdminLayout>

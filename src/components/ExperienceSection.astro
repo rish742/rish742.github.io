@@ -1,0 +1,45 @@
+---
+import styles from './ExperienceSection.module.css';
+
+interface ExperienceItem {
+  role: string;
+  company: string;
+  location: string;
+  period: string;
+  bullets: string[];
+}
+
+interface Props {
+  items: ExperienceItem[];
+  title?: string;
+}
+
+const { items, title = 'Experience' } = Astro.props;
+---
+
+<section class="section">
+  <div class="container">
+    <div class="sectionHeading">
+      <span class="eyebrow">Career</span>
+      <h2 class="sectionTitle">{title}</h2>
+    </div>
+    <ol class={styles.timeline}>
+      {items.map((item) => (
+        <li class={styles.item}>
+          <span class={styles.period}>{item.period}</span>
+          <div class={styles.details}>
+            <h3>{item.role}</h3>
+            <div class={styles.meta}>
+              {item.company} · {item.location}
+            </div>
+            <ul class={styles.bullets}>
+              {item.bullets.map((bullet) => (
+                <li>{bullet}</li>
+              ))}
+            </ul>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

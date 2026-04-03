@@ -1,0 +1,89 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import BlogCard from '@/components/BlogCard.astro';
+import { getAllPosts } from '@/lib/hybrid-blog.server';
+import { profile, siteMeta } from '@/data/portfolio';
+import '@/styles/blog.css';
+
+const posts = await getAllPosts();
+const listPosts = posts.map((post) => ({
+  id: post.id,
+  slug: post.slug,
+  title: post.title,
+  description: post.description,
+  date: post.date,
+  tags: post.tags,
+  readingTime: post.readingTime,
+  coverImage: post.coverImage,
+  authorName: post.authorName,
+  source: post.source,
+}));
+
+const featuredPost = listPosts[0] ?? null;
+const remainingPosts = listPosts.slice(1);
+const seedJson = JSON.stringify(listPosts).replace(/</g, '\\u003c');
+---
+
+<BaseLayout
+  title="Blog | Rishab Khatokar"
+  description="Editorial-style writing on analytics, machine learning delivery, and data workflows."
+  image={featuredPost?.coverImage || siteMeta.defaultImage}
+>
+  <section class="section articleShell blogIndexShell">
+    <div class="container">
+      <div class="blogIndexHero">
+        <span class="eyebrow">Journal</span>
+        <h1 class="pageTitle">A more editorial view of analytics, delivery, and data systems</h1>
+        <p class="pageLead">
+          Essays, implementation notes, and practical observations from analytics and data engineering work, designed to read cleanly and share well.
+        </p>
+      </div>
+
+      <div id="blog-featured-slot">
+        {
+          featuredPost ? (
+            <a class="blogFeatureCard" href={`/blog/${featuredPost.slug}`}>
+              <div class="blogFeatureMedia">
+                {featuredPost.coverImage ? (
+                  <img src={featuredPost.coverImage} alt={featuredPost.title} loading="lazy" />
+                ) : null}
+              </div>
+              <div class="blogFeatureContent">
+                <div class="blogMetaRow">
+                  <span>{new Date(featuredPost.date || '').toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                  <span>{featuredPost.readingTime} min read</span>
+                  <strong>{featuredPost.authorName || profile.name}</strong>
+                </div>
+                <h2 class="blogFeatureTitle">{featuredPost.title}</h2>
+                <p class="blogFeatureExcerpt">{featuredPost.description}</p>
+                <ul class="chipList">
+                  {featuredPost.tags.map((tag) => (
+                    <li>{tag}</li>
+                  ))}
+                </ul>
+              </div>
+            </a>
+          ) : (
+            <div class="blogStateCard">Published posts will appear here as soon as they are available.</div>
+          )
+        }
+      </div>
+
+      <div class="blogSectionRow">
+        <h2>Latest posts</h2>
+      </div>
+
+      <div class="blogGrid" id="blog-list-slot">
+        {remainingPosts.map((post) => (
+          <BlogCard href={`/blog/${post.slug}`} post={post} />
+        ))}
+      </div>
+
+      <script type="application/json" id="blog-seed-data" set:html={seedJson}></script>
+      <script>
+        import { initBlogIndexPage } from '@/scripts/blog-list';
+        initBlogIndexPage();
+      </script>
+    </div>
+  </section>
+</BaseLayout>

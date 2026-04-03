@@ -1,0 +1,17 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import AdminPostEditor from '@/components/AdminPostEditor.astro';
+---
+
+<AdminLayout
+  title="Edit Post"
+  activePath="/admin/posts"
+  intro="Update content, adjust metadata, upload an optional cover image, and control whether the post is still private or publicly published."
+>
+  <AdminPostEditor mode="edit" />
+
+  <script>
+    import { initAdminEditorPage } from '@/scripts/admin-editor';
+    initAdminEditorPage('edit');
+  </script>
+</AdminLayout>

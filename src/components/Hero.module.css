@@ -1,0 +1,55 @@
+.hero {
+  position: relative;
+  min-height: 720px;
+  display: grid;
+  align-items: center;
+  background:
+    linear-gradient(0deg, rgba(23, 25, 37, 0.8), rgba(23, 25, 37, 0.8)),
+    url('/assets/img/bg_image_1.jpg') center / cover no-repeat;
+  color: #fff;
+}
+
+.inner {
+  padding: 7rem 0 4rem;
+  text-align: center;
+}
+
+.welcome {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.title {
+  margin: 1rem 0;
+  font-size: clamp(3rem, 8vw, 4.9rem);
+  line-height: 1.02;
+  font-weight: 300;
+}
+
+.title strong {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.badge {
+  display: inline-flex;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+  border-radius: 999px;
+  background: rgba(253, 125, 20, 0.15);
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.summary {
+  max-width: 46rem;
+  margin: 1.6rem auto 0;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.actions {
+  justify-content: center;
+  margin-top: 2rem;
+}

@@ -1,0 +1,106 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Hero from '@/components/Hero.astro';
+import ProjectCard from '@/components/ProjectCard.astro';
+import SkillsSection from '@/components/SkillsSection.astro';
+import BlogCard from '@/components/BlogCard.astro';
+import { featuredSkills, profile, projects, quickFacts, siteMeta, skillGroups } from '@/data/portfolio';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf(),
+);
+const latestPosts = posts.slice(0, 2);
+const featuredProjects = projects.filter((project) => project.featured).slice(0, 3);
+---
+
+<BaseLayout
+  title={siteMeta.title}
+  description={siteMeta.description}
+  image={siteMeta.defaultImage}
+  transparentNav={true}
+>
+  <Hero />
+
+  <section class="section">
+    <div class="container split">
+      <div class="portraitFrame">
+        <img src="/assets/img/Rishab_pic1.jpg" alt="Portrait of Rishab Khatokar" loading="lazy" />
+      </div>
+      <div>
+        <span class="eyebrow">About</span>
+        <h2 class="sectionTitle">Analytics work with a clear delivery mindset</h2>
+        <p class="lede">{profile.summary}</p>
+        <dl class="factsList">
+          {quickFacts.map((fact) => (
+            <div>
+              <dt>{fact.label}</dt>
+              <dd>{fact.value}</dd>
+            </div>
+          ))}
+        </dl>
+        <ul class="chipList">
+          {featuredSkills.map((skill) => (
+            <li>{skill}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section sectionMuted">
+    <div class="container">
+      <div class="sectionHeading">
+        <span class="eyebrow">Projects</span>
+        <h2 class="sectionTitle">Featured portfolio work</h2>
+        <p class="lede">
+          Projects are updated from the current resume so the portfolio stays aligned with the latest role focus.
+        </p>
+      </div>
+      <div class="projectGrid">
+        {featuredProjects.map((project) => (
+          <ProjectCard project={project} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <SkillsSection
+    groups={skillGroups.slice(0, 4)}
+    title="Skills snapshot"
+    intro="The original site used percentage bars here; this version keeps the same section emphasis while switching to resume-backed categories instead of invented proficiency scores."
+  />
+
+  <section class="section">
+    <div class="container">
+      <div class="sectionHeading">
+        <span class="eyebrow">Blog</span>
+        <h2 class="sectionTitle">Latest writing</h2>
+        <p class="lede">
+          Tech posts structured for future publishing and LinkedIn sharing.
+        </p>
+      </div>
+      <div class="blogGrid">
+        {latestPosts.map((post) => (
+          <BlogCard href={`/blog/${post.slug}`} post={post.data} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="ctaBanner">
+        <span class="eyebrow">Resume</span>
+        <h2 class="sectionTitle">Need the full resume in one click?</h2>
+        <p>
+          The site includes a readable web resume and the latest PDF download for quick recruiter handoff.
+        </p>
+        <div class="buttonRow">
+          <a class="buttonPrimary" href="/resume">View Resume Page</a>
+          <a class="buttonOutline" href={profile.resumePath}>Download PDF</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

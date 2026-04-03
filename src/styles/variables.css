@@ -1,0 +1,18 @@
+:root {
+  --font-base: 'Quicksand', 'Segoe UI', sans-serif;
+  --color-bg: #ffffff;
+  --color-surface: #f4f5f8;
+  --color-surface-strong: #171925;
+  --color-surface-soft: #fbfbfc;
+  --color-text: #1d2430;
+  --color-muted: #747474;
+  --color-border: #dde2ea;
+  --color-accent: #fd7e14;
+  --color-accent-soft: rgba(253, 125, 20, 0.15);
+  --color-overlay: rgba(24, 27, 38, 0.76);
+  --shadow-soft: 0 18px 40px rgba(18, 24, 38, 0.08);
+  --shadow-card: 0 12px 30px rgba(18, 24, 38, 0.08);
+  --radius-card: 18px;
+  --radius-pill: 999px;
+  --container: 1120px;
+}

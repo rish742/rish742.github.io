@@ -1,0 +1,33 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { contactMethods, profile } from '@/data/portfolio';
+---
+
+<BaseLayout
+  title="Contact | Rishab Khatokar"
+  description="Public contact details and profile links for Rishab Khatokar."
+>
+  <section class="section articleShell">
+    <div class="container">
+      <div class="sectionHeading">
+        <span class="eyebrow">Contact</span>
+        <h1 class="pageTitle">Reach out for analytics, BI, or data engineering work</h1>
+        <p class="pageLead">
+          Public-facing contact details are drawn from the current resume and repository metadata.
+        </p>
+      </div>
+      <div class="linkList">
+        {contactMethods.map((method) => (
+          <a class="linkCard" href={method.href} target={method.href.startsWith('http') ? '_blank' : undefined} rel={method.href.startsWith('http') ? 'noreferrer' : undefined}>
+            <span>{method.label}</span>
+            <strong>{method.value}</strong>
+          </a>
+        ))}
+        <a class="linkCard" href={profile.resumePath}>
+          <span>Resume PDF</span>
+          <strong>Download latest resume</strong>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

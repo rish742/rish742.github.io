@@ -1,0 +1,19 @@
+---
+import styles from './Hero.module.css';
+import { profile } from '@/data/portfolio';
+---
+
+<section class={styles.hero}>
+  <div class:list={['container', styles.inner]}>
+    <p class={styles.welcome}>Welcome</p>
+    <h1 class={styles.title}>
+      I'm <strong>{profile.name}</strong>
+    </h1>
+    <div class={styles.badge}>{profile.role}</div>
+    <p class={styles.summary}>{profile.summary}</p>
+    <div class:list={['buttonRow', styles.actions]}>
+      <a class="buttonPrimary" href="/projects">View Projects</a>
+      <a class="buttonOutline" href={profile.resumePath}>Download Resume</a>
+    </div>
+  </div>
+</section>

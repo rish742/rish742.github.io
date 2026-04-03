@@ -1,0 +1,30 @@
+---
+import styles from './Footer.module.css';
+import { profile, siteMeta } from '@/data/portfolio';
+---
+
+<footer class={styles.footer}>
+  <div class:list={['container', styles.inner]}>
+    <div>
+      <h2 class={styles.brand}>{siteMeta.brand}</h2>
+      <p class={styles.tagline}>
+        Content-focused portfolio for analytics, data engineering, and machine learning work.
+      </p>
+    </div>
+    <div class={styles.meta}>
+      <div>
+        <h2>Follow me</h2>
+        <hr class={styles.divider} />
+        <a href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <div class={styles.meta}>
+      <div>
+        <h2>Contact</h2>
+        <hr class={styles.divider} />
+        <p>{profile.email}</p>
+        <p>{profile.location}</p>
+      </div>
+    </div>
+  </div>
+</footer>

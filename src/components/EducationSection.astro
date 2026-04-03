@@ -1,0 +1,41 @@
+---
+import styles from './EducationSection.module.css';
+
+interface EducationItem {
+  degree: string;
+  focus: string;
+  school: string;
+  location: string;
+}
+
+interface Props {
+  items: EducationItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<section class="section">
+  <div class="container">
+    <div class="sectionHeading">
+      <span class="eyebrow">Education</span>
+      <h2 class="sectionTitle">Academic Background</h2>
+      <p class="lede">
+        Degrees and focus areas pulled directly from the current resume PDF.
+      </p>
+    </div>
+    <ol class={styles.timeline}>
+      {items.map((item) => (
+        <li class={styles.item}>
+          <div class={styles.card}>
+            <h3 class={styles.degree}>{item.degree}</h3>
+            <p class={styles.focus}>{item.focus}</p>
+            <div class={styles.meta}>
+              {item.school} · {item.location}
+            </div>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

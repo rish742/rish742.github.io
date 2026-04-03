@@ -1,0 +1,27 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ProjectCard from '@/components/ProjectCard.astro';
+import { projects } from '@/data/portfolio';
+---
+
+<BaseLayout
+  title="Projects | Rishab Khatokar"
+  description="Selected analytics, BI, and data engineering projects by Rishab Khatokar."
+>
+  <section class="section articleShell">
+    <div class="container">
+      <div class="sectionHeading">
+        <span class="eyebrow">Projects</span>
+        <h1 class="pageTitle">Selected work in analytics and data engineering</h1>
+        <p class="pageLead">
+          These projects come from the current resume and highlight predictive modeling, portfolio analytics, and healthcare pipeline design.
+        </p>
+      </div>
+      <div class="projectGrid">
+        {projects.map((project) => (
+          <ProjectCard project={project} />
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

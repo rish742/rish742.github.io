@@ -1,0 +1,133 @@
+---
+import { marked } from 'marked';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import BlogCard from '@/components/BlogCard.astro';
+import ShareButtons from '@/components/ShareButtons.astro';
+import { profile, siteMeta } from '@/data/portfolio';
+import { getAllPosts, getPublishedMarkdownEntryMap, type MarkdownEntry } from '@/lib/hybrid-blog.server';
+import '@/styles/blog.css';
+
+export async function getStaticPaths() {
+  const [posts, markdownEntries] = await Promise.all([getAllPosts(), getPublishedMarkdownEntryMap()]);
+
+  return posts.map((post, index) => ({
+    params: { slug: post.slug },
+    props: {
+      post,
+      markdownEntry: post.source === 'markdown' ? markdownEntries.get(post.slug) || null : null,
+      olderPost: posts[index + 1] ?? null,
+      newerPost: posts[index - 1] ?? null,
+      relatedPosts: posts
+        .filter((entry) => entry.slug !== post.slug)
+        .filter((entry) => entry.tags.some((tag) => post.tags.includes(tag)))
+        .slice(0, 3),
+    },
+  }));
+}
+
+const {
+  post,
+  markdownEntry,
+  olderPost,
+  newerPost,
+  relatedPosts,
+}: {
+  post: Awaited<ReturnType<typeof getAllPosts>>[number];
+  markdownEntry: MarkdownEntry | null;
+  olderPost: Awaited<ReturnType<typeof getAllPosts>>[number] | null;
+  newerPost: Awaited<ReturnType<typeof getAllPosts>>[number] | null;
+  relatedPosts: Awaited<ReturnType<typeof getAllPosts>>;
+} = Astro.props;
+
+const markdownContent = post.source === 'markdown' && markdownEntry ? await markdownEntry.render() : null;
+const renderedFirestoreContent = post.source === 'firestore' ? (marked.parse(post.content) as string) : '';
+const image = post.coverImage || siteMeta.defaultImage;
+const canonical = new URL(`/blog/${post.slug}`, Astro.site ?? 'https://rishabrk.tech').toString();
+const publishDate = post.date || post.publishedAt || post.updatedAt || new Date().toISOString();
+---
+
+<BaseLayout
+  title={`${post.seoTitle || post.title} | Blog`}
+  description={post.seoDescription || post.description}
+  image={image}
+  pageType="article"
+>
+  <Fragment slot="head">
+    <meta property="article:published_time" content={publishDate} />
+    <meta property="article:author" content={post.authorName || profile.name} />
+  </Fragment>
+
+  <article class="section articleShell">
+    <div class="container blogArticleWrap">
+      <a class="blogBackLink" href="/blog">Back to Blog</a>
+
+      <div class="blogPostHero">
+        {post.coverImage ? (
+          <div class="blogPostCover">
+            <img src={post.coverImage} alt={post.title} loading="lazy" />
+          </div>
+        ) : null}
+        <div>
+          <span class="eyebrow">Article</span>
+          <h1 class="blogPostTitle">{post.title}</h1>
+          <p class="blogPostExcerpt">{post.description}</p>
+          <div class="blogMetaRow">
+            <strong>{post.authorName || profile.name}</strong>
+            <span>{new Date(publishDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+            <span>{post.readingTime} min read</span>
+          </div>
+          <ul class="chipList">
+            {post.tags.map((tag) => (
+              <li>{tag}</li>
+            ))}
+          </ul>
+          <ShareButtons title={post.title} url={canonical} />
+        </div>
+      </div>
+
+      <div class="blogBodyWrap">
+        <div class="blogBody richText">
+          {markdownContent ? <markdownContent.Content /> : <Fragment set:html={renderedFirestoreContent} />}
+        </div>
+        <ShareButtons title={post.title} url={canonical} compact={true} />
+      </div>
+
+      {relatedPosts.length ? (
+        <section class="blogRelatedSection">
+          <div class="blogSectionRow">
+            <h2>Related posts</h2>
+          </div>
+          <div class="blogGrid">
+            {relatedPosts.map((relatedPost) => (
+              <BlogCard href={`/blog/${relatedPost.slug}`} post={relatedPost} />
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {(olderPost || newerPost) ? (
+        <section class="blogPagerSection">
+          <div class="blogSectionRow">
+            <h2>Continue reading</h2>
+          </div>
+          <div class="blogPagerGrid">
+            {olderPost ? (
+              <a class="blogPagerCard" href={`/blog/${olderPost.slug}`}>
+                <span>Previous post</span>
+                <strong>{olderPost.title}</strong>
+              </a>
+            ) : (
+              <div></div>
+            )}
+            {newerPost ? (
+              <a class="blogPagerCard" href={`/blog/${newerPost.slug}`}>
+                <span>Next post</span>
+                <strong>{newerPost.title}</strong>
+              </a>
+            ) : null}
+          </div>
+        </section>
+      ) : null}
+    </div>
+  </article>
+</BaseLayout>

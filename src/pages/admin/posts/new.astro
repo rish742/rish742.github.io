@@ -1,0 +1,17 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import AdminPostEditor from '@/components/AdminPostEditor.astro';
+---
+
+<AdminLayout
+  title="New Post"
+  activePath="/admin/posts/new"
+  intro="Write in Markdown, preview the article live, and publish when the piece is ready to appear in the public blog flow."
+>
+  <AdminPostEditor mode="new" />
+
+  <script>
+    import { initAdminEditorPage } from '@/scripts/admin-editor';
+    initAdminEditorPage('new');
+  </script>
+</AdminLayout>

@@ -1,0 +1,60 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import '@/styles/admin.css';
+---
+
+<BaseLayout
+  title="Admin Login | Rishab Khatokar"
+  description="Secure sign-in page for the Firebase-backed blog admin."
+>
+  <section class="section articleShell adminLoginSection">
+    <div class="container adminLoginWrap">
+      <div class="adminLoginCard">
+        <div>
+          <span class="eyebrow">Blog Admin</span>
+          <h1 class="pageTitle">Sign in to manage posts</h1>
+          <p class="pageLead">
+            Use the authorized Google account to create, edit, publish, and maintain Firestore-backed blog articles from inside the site.
+          </p>
+        </div>
+
+        <div class="panel adminCard adminLoginPanel">
+          <div class="adminLoginMeta">
+            <span class="adminStatusBadge">Firebase Auth</span>
+            <strong data-admin-state-label>Awaiting sign-in</strong>
+            <p data-admin-email>Only the allowed admin email can continue.</p>
+          </div>
+
+          <div class="adminNotice" id="admin-login-feedback" hidden></div>
+
+          <p class="adminSmallNote" id="admin-login-helper">
+            Access is restricted through the configured admin email and enforced again through Firebase security rules.
+          </p>
+
+          <div class="buttonRow">
+            <button class="buttonPrimary" type="button" id="admin-google-signin">
+              Continue with Google
+            </button>
+            <a class="buttonOutline" href="/blog">Back to Blog</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="adminLoginAside">
+        <div class="panel adminCard">
+          <h2>What this unlocks</h2>
+          <ul class="adminFeatureList">
+            <li>Draft and publish Firestore-backed posts without editing the codebase for every article.</li>
+            <li>Manage SEO titles, descriptions, slugs, tags, and cover images in one place.</li>
+            <li>Preview Markdown content in a reading-friendly layout before publishing it publicly.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      import { initAdminLoginPage } from '@/scripts/admin-login';
+      initAdminLoginPage();
+    </script>
+  </section>
+</BaseLayout>

@@ -1,0 +1,32 @@
+{
+  "name": "rish742.github.io",
+  "version": "1.0.0",
+  "description": "Astro portfolio for Rishab Khatokar",
+  "scripts": {
+    "firebase:rules": "node scripts/generate-firebase-rules.mjs",
+    "dev": "npm run firebase:rules && astro dev",
+    "start": "npm run firebase:rules && astro dev",
+    "build": "npm run firebase:rules && astro build",
+    "preview": "npm run firebase:rules && astro preview",
+    "deploy": "npm run firebase:rules && astro build && firebase deploy --only hosting,firestore,storage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rish742/rish742.github.io.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/rish742/rish742.github.io/issues"
+  },
+  "homepage": "https://github.com/rish742/rish742.github.io#readme",
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.2",
+    "astro": "^5.18.1",
+    "dompurify": "^3.3.3",
+    "firebase": "^12.11.0",
+    "marked": "^17.0.5"
+  }
+}

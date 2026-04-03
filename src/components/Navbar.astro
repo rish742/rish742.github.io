@@ -1,0 +1,64 @@
+---
+import styles from './Navbar.module.css';
+import { siteMeta } from '@/data/portfolio';
+
+interface Props {
+  transparent?: boolean;
+}
+
+const { transparent = false } = Astro.props;
+const pathname = Astro.url.pathname;
+
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'About' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/resume', label: 'Resume' },
+  { href: '/contact', label: 'Contact' },
+];
+---
+
+<header class:list={[styles.header, transparent ? styles.transparent : styles.solid]}>
+  <div class="container">
+    <nav class={styles.nav} aria-label="Primary">
+      <a class={styles.brand} href="/">{siteMeta.brand}</a>
+      <button class={styles.toggle} type="button" aria-expanded="false" aria-controls="site-nav">
+        Menu
+      </button>
+      <div class={styles.links} id="site-nav" data-open="false">
+        {links.map((link) => (
+          <a href={link.href} aria-current={pathname === link.href ? 'page' : undefined}>
+            {link.label}
+          </a>
+        ))}
+      </div>
+    </nav>
+  </div>
+
+  <script is:inline>
+    const shell = document.currentScript?.previousElementSibling;
+    const button = shell?.querySelector('button[aria-controls="site-nav"]');
+    const menu = shell?.querySelector('#site-nav');
+    const closeMenu = () => {
+      menu?.setAttribute('data-open', 'false');
+      button?.setAttribute('aria-expanded', 'false');
+    };
+
+    button?.addEventListener('click', () => {
+      const open = menu?.getAttribute('data-open') === 'true';
+      menu?.setAttribute('data-open', String(!open));
+      button.setAttribute('aria-expanded', String(!open));
+    });
+
+    menu?.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', closeMenu);
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!shell?.contains(event.target)) {
+        closeMenu();
+      }
+    });
+  </script>
+</header>

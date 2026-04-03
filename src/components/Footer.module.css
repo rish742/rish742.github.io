@@ -1,0 +1,52 @@
+.footer {
+  padding: 3.5rem 0;
+  background: #171925;
+  color: #9fa2ab;
+}
+
+.inner {
+  display: grid;
+  gap: 2rem;
+}
+
+.brand {
+  margin: 0;
+  color: #fff;
+  font-size: 1.75rem;
+}
+
+.tagline {
+  max-width: 28rem;
+  margin: 0.9rem 0 0;
+}
+
+.meta {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.meta h2 {
+  margin: 0 0 0.75rem;
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+.meta a,
+.meta p {
+  margin: 0;
+  color: #fff;
+}
+
+.divider {
+  width: 130px;
+  margin: 0 0 1rem;
+  border: 0;
+  border-top: 2px dashed #9fa2ab;
+}
+
+@media (min-width: 900px) {
+  .inner {
+    grid-template-columns: minmax(0, 1.2fr) repeat(2, minmax(0, 0.8fr));
+    align-items: start;
+  }
+}

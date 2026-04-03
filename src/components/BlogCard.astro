@@ -1,0 +1,52 @@
+---
+interface BlogData {
+  title: string;
+  description: string;
+  date?: Date | string | null;
+  publishDate?: Date | string | null;
+  tags: string[];
+  readingTime?: number;
+  coverImage?: string;
+}
+
+interface Props {
+  href: string;
+  post: BlogData;
+}
+
+const { href, post } = Astro.props;
+const rawDate = post.date ?? post.publishDate ?? null;
+const dateValue = rawDate ? new Date(rawDate) : null;
+const formattedDate = dateValue
+  ? dateValue.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    })
+  : 'Draft';
+---
+
+<a class="blogListCard" href={href}>
+  <div class="blogListMedia">
+    {
+      post.coverImage ? (
+        <img src={post.coverImage} alt={post.title} loading="lazy" />
+      ) : (
+        <span>Article</span>
+      )
+    }
+  </div>
+  <div class="blogListContent">
+    <div class="blogListMeta">
+      <span>{formattedDate}</span>
+      {post.readingTime ? <span>{post.readingTime} min read</span> : null}
+    </div>
+    <h3 class="blogListTitle">{post.title}</h3>
+    <p class="blogListDescription">{post.description}</p>
+    <ul class="blogListTags">
+      {post.tags.map((tag) => (
+        <li>{tag}</li>
+      ))}
+    </ul>
+  </div>
+</a>
